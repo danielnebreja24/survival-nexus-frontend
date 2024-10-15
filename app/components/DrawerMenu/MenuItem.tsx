@@ -13,9 +13,14 @@ interface MenuItemProps {
 }
 
 const MenuItem: React.FC<MenuItemProps> = ({ title, icon }) => {
-  const { openDrawer } = useSurvivalContext();
+  const { openDrawer, setCurrentPage } = useSurvivalContext();
   return (
-    <ListItem key={title} disablePadding sx={{ display: "block" }}>
+    <ListItem
+      onClick={() => setCurrentPage(title)}
+      key={title}
+      disablePadding
+      sx={{ display: "block" }}
+    >
       <ListItemButton
         sx={[
           {

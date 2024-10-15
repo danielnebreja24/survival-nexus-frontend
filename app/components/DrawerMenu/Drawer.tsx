@@ -4,6 +4,7 @@ import {
   DashboardOutlined,
   Diversity3Outlined,
   HandshakeOutlined,
+  MedicationLiquidOutlined,
   WidgetsOutlined,
 } from "@mui/icons-material";
 import { createTheme, CSSObject, styled, Theme } from "@mui/material/styles";
@@ -89,7 +90,7 @@ export const DrawerComponent: React.FC = () => {
     },
     {
       title: "Items",
-      icon: <WidgetsOutlined />,
+      icon: <MedicationLiquidOutlined />,
     },
     {
       title: "Trading",
