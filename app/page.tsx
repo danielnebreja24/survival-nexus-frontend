@@ -13,6 +13,8 @@ import { DrawerComponent } from "./components/DrawerMenu/Drawer";
 import { useSurvivalContext } from "./context/survivalContext";
 import { Dashboard } from "./components/Dashboard/Dashboard";
 import { Survivors } from "./components/Survivors/Survivor";
+import { Inventory } from "./components/Inventory/Inventory";
+import { Trading } from "./components/Trading/Trading";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -48,21 +50,21 @@ export default function Home() {
   return (
     <ThemeProvider theme={theme}>
       <ToastContainer theme="colored" />
-      <Box sx={{ display: "flex" }}>
+      <Box className="flex">
         <CssBaseline />
         <AppBarComponent />
         <DrawerComponent />
 
-        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <Box component="main" className="flex-grow box-border p-5">
           <DrawerHeader />
           {currentPage === "Dashboard" ? (
             <Dashboard />
           ) : currentPage === "Survivors" ? (
             <Survivors />
-          ) : currentPage === "Items" ? (
-            <Typography variant="h3">Items</Typography>
+          ) : currentPage === "Inventory" ? (
+            <Inventory />
           ) : (
-            <Typography variant="h3">Trading</Typography>
+            <Trading />
           )}
         </Box>
       </Box>

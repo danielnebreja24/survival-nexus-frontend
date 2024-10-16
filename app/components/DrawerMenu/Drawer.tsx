@@ -89,7 +89,7 @@ export const DrawerComponent: React.FC = () => {
       icon: <Diversity3Outlined />,
     },
     {
-      title: "Items",
+      title: "Inventory",
       icon: <MedicationLiquidOutlined />,
     },
     {
@@ -132,7 +132,7 @@ export const DrawerComponent: React.FC = () => {
       <Divider />
       <List>
         {menuItems.map((text) => (
-          <MenuItem title={text.title} icon={text.icon} />
+          <MenuItem key={text.title} title={text.title} icon={text.icon} />
         ))}
       </List>
     </Drawer>

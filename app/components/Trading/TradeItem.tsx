@@ -21,84 +21,102 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
-interface Survivor {
-  name: string;
-  age: number | string;
-  gender: string;
-  lastLocation: {
-    longitude: number | string;
-    latitude: number | string;
-  };
-  infected: boolean;
-}
-
-export const AddSurvivor = () => {
-  const { createSurvivor } = useSurvivalContext();
+export const TradeItem = () => {
+  const { survivorList } = useSurvivalContext();
   const [open, setOpen] = useState<boolean>(false);
   const [disabled, setDisabled] = useState<boolean>(true);
-  const [name, setName] = useState<string>("");
-  const [age, setAge] = useState<string | number>("");
-  const [gender, setGender] = useState<string>("Male");
-  const [longitude, setLongitude] = useState<string | number>("");
-  const [latitude, setLatitude] = useState<string | number>("");
-  const [status, setStatus] = useState<string>("Uninfected");
+  const [yourItem, setYourItem] = useState<string>("");
+  const [yourQuantity, setYourQuantity] = useState<string | number>("");
+  const [receiver, setReceiver] = useState<string>("");
+  const [theirItem, setTheirItem] = useState<string>("");
+  const [theirQuantity, setTheirQuantity] = useState<string | number>("");
 
   useEffect(() => {
-    if (name && age && longitude && latitude) {
+    if (yourItem && yourQuantity && theirItem && theirQuantity) {
       setDisabled(false);
     }
-  }, [name, age, longitude, latitude]);
+  }, [yourItem, yourQuantity, theirItem, theirQuantity]);
 
-  const handleSave = async () => {
-    const form: Survivor = {
-      name,
-      age: +age,
-      gender,
-      lastLocation: { longitude: +longitude, latitude: +latitude },
-      infected: status === "Infected" ? true : false,
-    };
+  //   const handleSave = async () => {
+  //     const form: Survivor = {
+  //       name,
+  //       age: +age,
+  //       gender,
+  //       lastLocation: { longitude: +longitude, latitude: +latitude },
+  //       infected: status === "Infected" ? true : false,
+  //     };
 
-    const response = await createSurvivor(form);
+  //     const response = await createSurvivor(form);
 
-    if (!response?.error) {
-      toast.success("Survivor saved successfully");
-      setOpen(false);
+  //     if (!response?.error) {
+  //       toast.success("Survivor saved successfully");
+  //       setOpen(false);
 
-      setName("");
-      setAge("");
-      setGender("Male");
-      setLongitude("");
-      setLatitude("");
-      setStatus("Uninfected");
-    } else {
-      toast.error(response.error || "An error occurred");
-    }
-  };
+  //       setName("");
+  //       setAge("");
+  //       setGender("Male");
+  //       setLongitude("");
+  //       setLatitude("");
+  //       setStatus("Uninfected");
+  //     } else {
+  //       toast.error(response.error || "An error occurred");
+  //     }
+  //   };
 
   return (
     <>
-      <Button onClick={() => setOpen(true)} variant="contained" color="primary">
-        <AddCircleOutline className="mr-2" /> Add Survivor
+      <Button
+        size="small"
+        onClick={() => setOpen(true)}
+        variant="contained"
+        color="primary"
+      >
+        Trade Item
       </Button>
-      <Dialog
+      {/* <Dialog
         open={open}
         onClose={() => setOpen(false)}
         maxWidth="sm"
         fullWidth
       >
         <DialogTitle className="flex items-center">
-          <PersonAddAlt1TwoTone /> &nbsp; Add new survivor
+          <PersonAddAlt1TwoTone /> &nbsp; Trade Item
         </DialogTitle>
         <DialogContent>
           <div className="flex flex-col gap-4 py-2">
-            <TextField
-              value={name}
-              name="name"
-              onChange={(e) => setName(e.target.value)}
-              size="small"
-              label="Name"
-              placeholder="Enter survivor's name"
-            />
+          <div className="flex gap-2">
+          <div className="w-1/2">
+                <FormControl fullWidth>
+                  <InputLabel id="gender">Gender</InputLabel>
+                  <Select
+                    value={gender}
+                    name="gender"
+                    onChange={(e) => setGender(e.target.value)}
+                    labelId="gender"
+                    defaultValue="Male"
+                    label="Gender"
+                    size="small"
+                  >
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Others">Others</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="w-1/2">
+                <TextField
+                  name="age"
+                  value={age}
+                  onChange={(e) => setAge(e.target.value)}
+                  size="small"
+                  label="Age"
+                  placeholder="Enter survivor's age"
+                  type="number"
+                  fullWidth
+                />
+              </div>
+              
+            </div>
 
             <div className="flex gap-2">
               <div className="w-1/2">
@@ -200,7 +218,7 @@ export const AddSurvivor = () => {
             Save
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 };

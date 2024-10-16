@@ -5,6 +5,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 
 interface MenuItemProps {
@@ -36,23 +37,25 @@ const MenuItem: React.FC<MenuItemProps> = ({ title, icon }) => {
               },
         ]}
       >
-        <ListItemIcon
-          sx={[
-            {
-              minWidth: 0,
-              justifyContent: "center",
-            },
-            openDrawer
-              ? {
-                  mr: 3,
-                }
-              : {
-                  mr: "auto",
-                },
-          ]}
-        >
-          {icon}
-        </ListItemIcon>
+        <Tooltip title={title} placement="right">
+          <ListItemIcon
+            sx={[
+              {
+                minWidth: 0,
+                justifyContent: "center",
+              },
+              openDrawer
+                ? {
+                    mr: 3,
+                  }
+                : {
+                    mr: "auto",
+                  },
+            ]}
+          >
+            {icon}
+          </ListItemIcon>
+        </Tooltip>
         <ListItemText
           primary={title}
           sx={[
