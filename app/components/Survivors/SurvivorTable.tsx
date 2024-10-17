@@ -76,6 +76,7 @@ export const SurvivorTable = () => {
     {
       field: "actions",
       headerName: "Actions",
+      renderHeader: () => <b>Actions</b>,
       width: 150,
       renderCell: ({ row }: { row: Survivor }) => {
         return (
@@ -90,7 +91,7 @@ export const SurvivorTable = () => {
   const paginationModel = { page: 0, pageSize: 10 };
 
   return (
-    <Box className="shadow-lg rounded-lg mt-5 ">
+    <Box className="shadow-lg rounded-lg mt-2 ">
       <DataGrid
         disableRowSelectionOnClick
         disableColumnSelector
@@ -104,6 +105,9 @@ export const SurvivorTable = () => {
           },
           "& .MuiButtonBase-root:focus": {
             outline: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            maxHeight: "550px", // Set max height here
           },
         }}
       />

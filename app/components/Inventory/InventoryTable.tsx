@@ -24,12 +24,23 @@ export const ItemsTable = () => {
   const paginationModel = { page: 0, pageSize: 10 };
 
   return (
-    <Box className="shadow-lg rounded-lg mt-5 ">
+    <Box className="shadow-lg rounded-lg mt-2 ">
       <DataGrid
         rows={itemsList}
         columns={columns}
         initialState={{ pagination: { paginationModel } }}
         pageSizeOptions={[5, 10]}
+        sx={{
+          "& .MuiDataGrid-columnHeader:focus, & .MuiDataGrid-cell:focus": {
+            outline: "none",
+          },
+          "& .MuiButtonBase-root:focus": {
+            outline: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            maxHeight: "550px", // Set max height here
+          },
+        }}
       />
     </Box>
   );

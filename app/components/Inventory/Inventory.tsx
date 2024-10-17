@@ -5,12 +5,15 @@ import { useSurvivalContext } from "@/app/context/survivalContext";
 import { useEffect } from "react";
 
 export const Inventory = () => {
-  const { fetchItems } = useSurvivalContext();
+  const { itemsList } = useSurvivalContext();
 
   return (
-    <Box component="section" className="box-border p-2">
+    <Box component="section" className="box-border px-2">
+      <h4 className="text-2xl font-bold mt-2">List of items</h4>{" "}
       <div className="flex justify-between items-center">
-        <h4 className="text-1xl font-bold">List of items in inventory</h4>{" "}
+        <span className="text-sm">
+          You have a total of <b>{itemsList.length}</b> items
+        </span>
         <AddItems />
       </div>
       <ItemsTable />

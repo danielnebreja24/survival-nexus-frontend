@@ -1,21 +1,7 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useSurvivalContext } from "@/app/context/survivalContext";
-import { Button, Chip } from "@mui/material";
-import {
-  AddCircleOutline,
-  CoronavirusOutlined,
-  HealthAndSafetyOutlined,
-  LocationOnOutlined,
-} from "@mui/icons-material";
 import { Box } from "@mui/material";
-import { TradeItem } from "./TradeItem";
-import { useEffect, useState } from "react";
-// import { AddItemToSurvivor } from "./AddItemToSurvivor";
-
-interface ItemsResponse {
-  id: number;
-  name: string;
-}
+import { TradeItem } from "./TradeItem/TradeItem";
 
 interface NewItem {
   id: number;
@@ -23,59 +9,31 @@ interface NewItem {
   name: string;
 }
 
-interface Inventory {
-  id: number;
-  itemId: number;
-  quantity: number;
-  survivorId: number;
-  item: ItemsResponse;
-}
-
 interface Survivor {
   id: number;
   name: string;
-
   items: NewItem[];
 }
 
 export const TradingTable = () => {
-  const { survivorList } = useSurvivalContext();
-  const [survivorWithItems, setSurvivorWithItems] = useState<Survivor[] | []>(
-    []
-  );
-
-  useEffect(() => {
-    if (survivorList.length > 0) {
-      const survivorWithItems: Survivor[] = survivorList
-        .filter((survivor) => survivor.inventory.length) // Filter out survivors without items
-        .map((survivor) => ({
-          id: survivor.id,
-          name: survivor.name,
-          items: survivor.inventory.map((item: Inventory) => ({
-            id: item.id,
-            quantity: item.quantity,
-            name: item.item.name,
-          })),
-        }));
-
-      setSurvivorWithItems(survivorWithItems);
-    }
-  }, [survivorList]);
+  const { survivorWithItems } = useSurvivalContext();
 
   const columns: GridColDef[] = [
-    { field: "name", renderHeader: () => <b>Name</b>, width: 200, flex: 1 },
+    { field: "name", renderHeader: () => <b>Name</b>, width: 300 },
     {
       field: "items",
       renderHeader: () => <b>Inventories</b>,
       renderCell: ({ row }: { row: Survivor }) => {
-        console.log(row);
         return (
-          <div className="flex gap-2">
-            {row.items.map((item, i) => (
-              <span>
-                {item.quantity} {item.name} {i !== row.items.length - 1 && ","}
-              </span>
-            ))}
+          <div className="flex gap-2 overflow-hidden whitespace-nowrap w-full">
+            <div className="overflow-hidden text-ellipsis max-w-full">
+              {row.items.map((item, i) => (
+                <span>
+                  {item.quantity} {item.name}
+                  {i !== row.items.length - 1 && ", "}
+                </span>
+              ))}
+            </div>
           </div>
         );
       },
@@ -86,11 +44,12 @@ export const TradingTable = () => {
     {
       field: "actions",
       headerName: "Actions",
+      renderHeader: () => <b>Actions</b>,
       width: 150,
       renderCell: ({ row }: { row: Survivor }) => {
         return (
           <span>
-            <TradeItem />
+            <TradeItem currentSurvivor={row} />
           </span>
         );
       },
@@ -114,6 +73,9 @@ export const TradingTable = () => {
           },
           "& .MuiButtonBase-root:focus": {
             outline: "none",
+          },
+          "& .MuiDataGrid-virtualScroller": {
+            maxHeight: "550px", // Set max height here
           },
         }}
       />

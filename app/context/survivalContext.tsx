@@ -21,7 +21,16 @@ interface SurvivalContextProps {
     itemId: number,
     quantity: number
   ) => Promise<any>;
-  // fetchSurvivorItems: () => Promise<any>;
+  survivorWithItems: ItemsSurvivor[];
+  tradeItems: (
+    traderID: number,
+    receiverID: number,
+    traderItemID: number,
+    receiverItemID: number,
+    traderItemQty: number,
+    receiverItemQty: number
+  ) => Promise<any>;
+  fetchAverageItemPerSurvivor: () => Promise<any>;
   createItems: (form: Items) => Promise<any>;
   fetchItems: () => Promise<void>;
   fetchSurvivors: () => Promise<void>;
@@ -82,6 +91,17 @@ interface ItemsResponse {
   description: string;
 }
 
+interface NewItem {
+  id: number;
+  quantity: number;
+  name: string;
+}
+
+interface ItemsSurvivor {
+  id: number;
+  name: string;
+  items: NewItem[];
+}
 export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
   children,
 }) => {
@@ -90,6 +110,27 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const [survivorList, setSurvivorList] = useState<SurvivorResponse[]>([]);
   const [itemsList, setItemsList] = useState<ItemsResponse[]>([]);
+  const [survivorWithItems, setSurvivorWithItems] = useState<
+    ItemsSurvivor[] | []
+  >([]);
+
+  useEffect(() => {
+    if (survivorList.length > 0) {
+      const survivorWithItems: ItemsSurvivor[] = survivorList
+        .filter((survivor) => survivor.inventory.length) // Filter out survivors without items
+        .map((survivor) => ({
+          id: survivor.id,
+          name: survivor.name,
+          items: survivor.inventory.map((item: Inventory) => ({
+            id: item.item.id,
+            quantity: item.quantity,
+            name: item.item.name,
+          })),
+        }));
+
+      setSurvivorWithItems(survivorWithItems);
+    }
+  }, [survivorList]);
 
   useEffect(() => {
     fetchSurvivors();
@@ -119,7 +160,6 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/survivors`
       );
-      console.log(response.data);
 
       if (response.status === 200) {
         setSurvivorList(response.data);
@@ -182,6 +222,51 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
     }
   };
 
+  const tradeItems = async (
+    traderId: number,
+    receiverId: number,
+    traderItemId: number,
+    receiverItemId: number,
+    traderItemQty: number,
+    receiverItemQty: number
+  ) => {
+    try {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/trade`,
+        {
+          traderId,
+          receiverId,
+          traderItemId,
+          receiverItemId,
+          traderItemQty,
+          receiverItemQty,
+        }
+      );
+      if (response.status === 200) {
+        fetchSurvivors();
+        return response.data;
+      }
+    } catch (error: any) {
+      console.error(error);
+      return { error: error?.response?.data?.error || "An error occurred" };
+    }
+  };
+
+  const fetchAverageItemPerSurvivor = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/averageItemSurvivor`
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      }
+    } catch (error: any) {
+      console.error(error);
+      return { error: error?.response?.data?.error || "An error occurred" };
+    }
+  };
+
   // const fetchSurvivorItems = async () => {
   //   try {
   //     const response = await axios.get(
@@ -203,7 +288,9 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
       currentPage,
       survivorList,
       itemsList,
-      // fetchSurvivorItems,
+      survivorWithItems,
+      fetchAverageItemPerSurvivor,
+      tradeItems,
       addItemsToSurvivor,
       fetchItems,
       createItems,
@@ -219,10 +306,17 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
       currentPage,
       survivorList,
       itemsList,
+      survivorWithItems,
+      fetchAverageItemPerSurvivor,
+      tradeItems,
+      addItemsToSurvivor,
       fetchItems,
       createItems,
       fetchSurvivors,
       createSurvivor,
+      setCurrentPage,
+      setOpenDrawer,
+      setMode,
     ]
   );
 
