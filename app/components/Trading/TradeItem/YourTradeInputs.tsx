@@ -6,7 +6,7 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 interface NewItem {
   id: number;
@@ -43,7 +43,7 @@ export const YourTradeInputs = ({
       }
     }
     return 0;
-  }, [yourItem]);
+  }, [yourItem, currentSurvivor]);
 
   return (
     <div className="flex gap-2">

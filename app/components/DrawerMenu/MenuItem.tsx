@@ -1,4 +1,3 @@
-// app/components/MenuItem.tsx
 import { useSurvivalContext } from "@/app/context/survivalContext";
 import {
   ListItem,

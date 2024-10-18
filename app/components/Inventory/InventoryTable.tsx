@@ -38,7 +38,7 @@ export const ItemsTable = () => {
             outline: "none",
           },
           "& .MuiDataGrid-virtualScroller": {
-            maxHeight: "550px", // Set max height here
+            maxHeight: "550px",
           },
         }}
       />

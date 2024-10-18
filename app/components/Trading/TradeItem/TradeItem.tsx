@@ -1,10 +1,5 @@
 import { useSurvivalContext } from "@/app/context/survivalContext";
-import {
-  AddCircleOutline,
-  PersonAddAlt1Outlined,
-  PersonAddAlt1TwoTone,
-  PersonAddOutlined,
-} from "@mui/icons-material";
+
 import {
   Button,
   Dialog,
@@ -12,13 +7,7 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
 } from "@mui/material";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { YourTradeInputs } from "./YourTradeInputs";

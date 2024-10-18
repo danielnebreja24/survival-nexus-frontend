@@ -52,7 +52,7 @@ export const ReceiverTradeInputs = ({
       }
     }
     return 0;
-  }, [receiverItem]);
+  }, [receiverItem, currentReceiverItems]);
 
   useEffect(() => {
     const currentReceiver = survivorWithItems.find(
@@ -62,9 +62,7 @@ export const ReceiverTradeInputs = ({
       setCurrentReceiverItems(currentReceiver.items);
       setReceiverItem(currentReceiver.items[0].id);
     }
-  }, [receiver]);
-
-  console.log(survivorWithItems, currentReceiverItems);
+  }, [receiver, survivorWithItems]);
 
   return (
     <div>

@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import { AddItems } from "./AddItems";
 import { ItemsTable } from "./InventoryTable";
 import { useSurvivalContext } from "@/app/context/survivalContext";
-import { useEffect } from "react";
 
 export const Inventory = () => {
   const { itemsList } = useSurvivalContext();

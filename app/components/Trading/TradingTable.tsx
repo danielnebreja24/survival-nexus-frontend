@@ -28,7 +28,7 @@ export const TradingTable = () => {
           <div className="flex gap-2 overflow-hidden whitespace-nowrap w-full">
             <div className="overflow-hidden text-ellipsis max-w-full">
               {row.items.map((item, i) => (
-                <span>
+                <span key={item.name}>
                   {item.quantity} {item.name}
                   {i !== row.items.length - 1 && ", "}
                 </span>
@@ -75,7 +75,7 @@ export const TradingTable = () => {
             outline: "none",
           },
           "& .MuiDataGrid-virtualScroller": {
-            maxHeight: "550px", // Set max height here
+            maxHeight: "550px",
           },
         }}
       />

@@ -13,7 +13,7 @@ export const Survivors = () => {
 
   const infected = useMemo(() => {
     return survivorList.length - healthy;
-  }, [survivorList]);
+  }, [survivorList, healthy]);
 
   return (
     <Box component="section" className="box-border px-2">

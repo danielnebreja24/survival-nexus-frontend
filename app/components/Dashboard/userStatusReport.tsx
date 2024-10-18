@@ -19,14 +19,14 @@ export const UserStatusReport = ({
 
   return (
     <div
-      className={`max-w-xl w-1/4 border rounded-lg shadow-lg overflow-hidden mt-5 
+      className={`max-w-xl w-64 xl:w-80 mr-2 border flex flex-col rounded-lg shadow-lg overflow-hidden mb-5 
       ${
         mode === "dark"
           ? "bg-gray-800 border-gray-700"
           : "bg-white border-gray-200"
       }`}
     >
-      <div className="p-4">
+      <div className="p-4 flex-grow">
         <div
           className={`text-3xl font-bold w-full flex items-center justify-between 
           ${mode === "dark" ? "text-white" : "text-gray-800"}`}
@@ -34,7 +34,7 @@ export const UserStatusReport = ({
           {type === "Survivors" ? infectedUsers.length : data.length}
           {type === "Survivors" && (
             <Chip
-              label={`${(infectedUsers.length / data.length) * 100}%`}
+              label={`${(infectedUsers.length / data.length || 0) * 100}%`}
               className="ml-2"
               color={status === "Healthy" ? "success" : "error"}
               variant="outlined"
@@ -57,7 +57,7 @@ export const UserStatusReport = ({
         </p>
       </div>
       <div
-        className={`p-3 flex justify-between items-center 
+        className={`p-3 flex justify-between items-center flex-grow
         ${mode === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
       >
         <span

@@ -1,4 +1,5 @@
 "use client";
+
 import { PaletteMode } from "@mui/material";
 import axios from "axios";
 import {
@@ -16,12 +17,12 @@ interface SurvivalContextProps {
   currentPage: string;
   survivorList: SurvivorResponse[];
   itemsList: ItemsResponse[];
+  survivorWithItems: ItemsSurvivor[];
   addItemsToSurvivor: (
-    survivalId: number,
+    survivorId: number,
     itemId: number,
     quantity: number
   ) => Promise<any>;
-  survivorWithItems: ItemsSurvivor[];
   tradeItems: (
     traderID: number,
     receiverID: number,
@@ -102,6 +103,8 @@ interface ItemsSurvivor {
   name: string;
   items: NewItem[];
 }
+
+const baseUrl = "http://localhost:5000/api";
 export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
   children,
 }) => {
@@ -110,26 +113,27 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
   const [currentPage, setCurrentPage] = useState("Dashboard");
   const [survivorList, setSurvivorList] = useState<SurvivorResponse[]>([]);
   const [itemsList, setItemsList] = useState<ItemsResponse[]>([]);
-  const [survivorWithItems, setSurvivorWithItems] = useState<
-    ItemsSurvivor[] | []
-  >([]);
+  const [survivorWithItems, setSurvivorWithItems] = useState<ItemsSurvivor[]>(
+    []
+  );
 
   useEffect(() => {
-    if (survivorList.length > 0) {
-      const survivorWithItems: ItemsSurvivor[] = survivorList
-        .filter((survivor) => survivor.inventory.length) // Filter out survivors without items
+    const updateSurvivorWithItems = () => {
+      const updatedList = survivorList
+        .filter((survivor) => survivor.inventory.length > 0)
         .map((survivor) => ({
           id: survivor.id,
           name: survivor.name,
-          items: survivor.inventory.map((item: Inventory) => ({
-            id: item.item.id,
-            quantity: item.quantity,
-            name: item.item.name,
+          items: survivor.inventory.map(({ item, quantity }: Inventory) => ({
+            id: item.id,
+            quantity,
+            name: item.name,
           })),
         }));
+      setSurvivorWithItems(updatedList as ItemsSurvivor[]);
+    };
 
-      setSurvivorWithItems(survivorWithItems);
-    }
+    updateSurvivorWithItems();
   }, [survivorList]);
 
   useEffect(() => {
@@ -137,68 +141,44 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
     fetchItems();
   }, []);
 
-  // SURVIVOR'S CRUD OPERATIONS
-  const createSurvivor = async (form: Survivor) => {
+  const apiCall = async (method: "GET" | "POST", url: string, data?: any) => {
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/survivors`,
-        form
-      );
+      const response = await axios({
+        method,
+        url: `${process.env.NEXT_PUBLIC_API_URL || baseUrl}${url}`,
+        data,
+      });
 
-      if (response.status === 201) {
-        fetchSurvivors();
-        return response.data;
-      }
+      console.log(data);
+
+      return response?.data || {};
     } catch (error: any) {
       console.error(error);
       return { error: error?.response?.data?.error || "An error occurred" };
     }
+  };
+
+  const createSurvivor = async (form: Survivor) => {
+    const response = await apiCall("POST", "/survivors", form);
+    if (response) fetchSurvivors();
+    return response;
   };
 
   const fetchSurvivors = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/survivors`
-      );
+    const response = await apiCall("GET", "/survivors");
 
-      if (response.status === 200) {
-        setSurvivorList(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    if (response) setSurvivorList(response);
   };
 
-  // ITEMS CRUD OPERATIONS
   const createItems = async (form: Items) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/items`,
-        form
-      );
-
-      if (response.status === 201) {
-        fetchItems();
-        return response.data;
-      }
-    } catch (error: any) {
-      console.error(error);
-      return { error: error?.response?.data?.error || "An error occurred" };
-    }
+    const response = await apiCall("POST", "/items", form);
+    if (response) fetchItems();
+    return response;
   };
 
   const fetchItems = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/items`
-      );
-
-      if (response.status === 200) {
-        setItemsList(response.data);
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    const response = await apiCall("GET", "/items");
+    if (response) setItemsList(response);
   };
 
   const addItemsToSurvivor = async (
@@ -206,20 +186,13 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
     itemId: number,
     quantity: number
   ) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/survivorItem`,
-        { survivorId, itemId, quantity }
-      );
-
-      if (response.status === 201) {
-        fetchSurvivors();
-        return response.data;
-      }
-    } catch (error: any) {
-      console.error(error);
-      return { error: error?.response?.data?.error || "An error occurred" };
-    }
+    const response = await apiCall("POST", "/survivorItem", {
+      survivorId,
+      itemId,
+      quantity,
+    });
+    if (response) fetchSurvivors();
+    return response;
   };
 
   const tradeItems = async (
@@ -230,56 +203,21 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
     traderItemQty: number,
     receiverItemQty: number
   ) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/trade`,
-        {
-          traderId,
-          receiverId,
-          traderItemId,
-          receiverItemId,
-          traderItemQty,
-          receiverItemQty,
-        }
-      );
-      if (response.status === 200) {
-        fetchSurvivors();
-        return response.data;
-      }
-    } catch (error: any) {
-      console.error(error);
-      return { error: error?.response?.data?.error || "An error occurred" };
-    }
+    const response = await apiCall("POST", "/trade", {
+      traderId,
+      receiverId,
+      traderItemId,
+      receiverItemId,
+      traderItemQty,
+      receiverItemQty,
+    });
+    if (response) fetchSurvivors();
+    return response;
   };
 
   const fetchAverageItemPerSurvivor = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/averageItemSurvivor`
-      );
-
-      if (response.status === 200) {
-        return response.data;
-      }
-    } catch (error: any) {
-      console.error(error);
-      return { error: error?.response?.data?.error || "An error occurred" };
-    }
+    return await apiCall("GET", "/averageItemSurvivor");
   };
-
-  // const fetchSurvivorItems = async () => {
-  //   try {
-  //     const response = await axios.get(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/survivorItem`
-  //     );
-  //     console.log(response);
-  //     if (response.status === 200) {
-  //       return response.data;
-  //     }
-  //   } catch (error) {
-  //     console.error(error);
-  //   }
-  // };
 
   const contextValue = useMemo(
     () => ({
@@ -300,24 +238,7 @@ export const SurvivalProvider: React.FC<SurvivalProviderProps> = ({
       setOpenDrawer,
       setMode,
     }),
-    [
-      mode,
-      openDrawer,
-      currentPage,
-      survivorList,
-      itemsList,
-      survivorWithItems,
-      fetchAverageItemPerSurvivor,
-      tradeItems,
-      addItemsToSurvivor,
-      fetchItems,
-      createItems,
-      fetchSurvivors,
-      createSurvivor,
-      setCurrentPage,
-      setOpenDrawer,
-      setMode,
-    ]
+    [mode, openDrawer, currentPage, survivorList, itemsList, survivorWithItems]
   );
 
   return (

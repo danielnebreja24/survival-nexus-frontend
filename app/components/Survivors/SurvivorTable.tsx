@@ -1,9 +1,8 @@
 import * as React from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { useSurvivalContext } from "@/app/context/survivalContext";
-import { Button, Chip } from "@mui/material";
+import { Chip } from "@mui/material";
 import {
-  AddCircleOutline,
   CoronavirusOutlined,
   HealthAndSafetyOutlined,
   LocationOnOutlined,
@@ -107,7 +106,7 @@ export const SurvivorTable = () => {
             outline: "none",
           },
           "& .MuiDataGrid-virtualScroller": {
-            maxHeight: "550px", // Set max height here
+            maxHeight: "550px",
           },
         }}
       />

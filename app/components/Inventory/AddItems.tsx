@@ -1,19 +1,11 @@
 import { useSurvivalContext } from "@/app/context/survivalContext";
-import {
-  AddCircleOutline,
-  AddShoppingCartOutlined,
-  PersonAddAlt1TwoTone,
-} from "@mui/icons-material";
+import { AddCircleOutline, AddShoppingCartOutlined } from "@mui/icons-material";
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
@@ -44,8 +36,6 @@ export const AddItems = () => {
     };
 
     const response = await createItems(form);
-
-    console.log(response);
 
     if (!response?.error) {
       toast.success("Survivor saved successfully");

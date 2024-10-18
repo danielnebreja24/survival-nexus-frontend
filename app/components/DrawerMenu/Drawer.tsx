@@ -1,11 +1,9 @@
-// app/components/Drawer.tsx
 import { Divider, List, IconButton, Drawer as MuiDrawer } from "@mui/material";
 import {
   DashboardOutlined,
   Diversity3Outlined,
   HandshakeOutlined,
   MedicationLiquidOutlined,
-  WidgetsOutlined,
 } from "@mui/icons-material";
 import { createTheme, CSSObject, styled, Theme } from "@mui/material/styles";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
@@ -47,7 +45,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 
