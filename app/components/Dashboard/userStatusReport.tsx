@@ -34,7 +34,9 @@ export const UserStatusReport = ({
           {type === "Survivors" ? infectedUsers.length : data.length}
           {type === "Survivors" && (
             <Chip
-              label={`${(infectedUsers.length / data.length || 0) * 100}%`}
+              label={`${Math.round(
+                (infectedUsers.length / data.length || 0) * 100
+              )}%`}
               className="ml-2"
               color={status === "Healthy" ? "success" : "error"}
               variant="outlined"
